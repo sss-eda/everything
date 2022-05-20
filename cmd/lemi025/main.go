@@ -1,6 +1,10 @@
 package main
 
-import "log"
+import (
+	"log"
+
+	"github.com/sss-eda/everything/lemi025"
+)
 
 func main() {
 	client, err := websocket.NewInstrumentClient("ws://api.sansa.dev/instrument")
@@ -10,9 +14,9 @@ func main() {
 
 	instrument, err := serial.NewLemi025Adapter("/dev/ttyACM0")
 
-	client.Subscribe(lemi025.ReadConfigCommand, lemi025.ReadConfig)
-	client.Subscribe(lemi025.ReadTimeCommand, lemi025.ReadTime)
-	client.Subscribe(lemi025.SetTimeCommand, lemi025.SetTime)
+	client.Subscribe(lemi025.ReadConfigCommand, instrument.ReadConfig)
+	client.Subscribe(lemi025.ReadTimeCommand, instrument.ReadTime)
+	client.Subscribe(lemi025.SetTimeCommand, instrument.SetTime)
 
 	instrument.Subscribe(lemi025.ConfigReadEvent, client.Publish)
 	instrument.Subscribe(lemi025.TimeReadEvent, client.Publish)
