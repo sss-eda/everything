@@ -14,6 +14,9 @@ func main() {
 
 	instrument, err := serial.NewLemi025Adapter("/dev/ttyACM0")
 
+	commands := client.Subscribe("commands")
+	events := instrument.Subscribe("events")
+
 	client.Subscribe(lemi025.ReadConfigCommand, instrument.ReadConfig)
 	client.Subscribe(lemi025.ReadTimeCommand, instrument.ReadTime)
 	client.Subscribe(lemi025.SetTimeCommand, instrument.SetTime)

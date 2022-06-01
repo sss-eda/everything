@@ -6,6 +6,47 @@ import (
 	"github.com/sss-eda/everything/instrumentation"
 )
 
+// type ReadConfigFunc func(context.Context, ReadConfigCommandPayload) error
+// type ReadTimeFunc func(context.Context, ReadTimeCommandPayload) error
+
+// type ConfigReadPresenter func(context.Context, chan<- ConfigReadEvent, chan<- error)
+
+// type Subscription interface {
+//     Updates() <-chan Event // stream of Events
+//     Close() error         // shuts down the stream
+// }
+
+// type subscription struct {
+// 	closing chan chan error
+// 	messages []Message
+// }
+
+// func (sub *subscription) loop() {
+// 	var err error
+
+// 	for {
+// 		select {
+// 			case sub.pending
+// 			case errc <-sub.closing:
+// 				errc <- err
+// 				close(sub.updates)
+// 				return
+// 		}
+// 	}
+// }
+
+// func (sub *subscription) Updates() <-chan Event {
+// 	return nil
+// }
+
+// func something(errc chan chan error) {
+// 	for {
+// 		select {
+// 			case err
+// 		}
+// 	}
+// }
+
 type Command[C Commands] struct {
 	InstrumentID instrumentation.InstrumentID
 	Payload      C
@@ -16,14 +57,6 @@ type Commands interface {
 		ReadCoefficients1Command | SetCoefficients2Command | ReadCoefficients2Command |
 		ReadGPSDataCommand | StopSystemCommand | StartSystemCommand | CheckFLASHCommand |
 		SetDACxCommand | SetDACyCommand | SetDACzCommand
-}
-
-type ReadConfigCommand struct{}
-
-func (command ReadConfigCommand) Publish(
-	id InstrumentID,
-) error {
-	return nil
 }
 
 type ReadTimeCommand struct{}

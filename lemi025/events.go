@@ -2,29 +2,30 @@ package lemi025
 
 import (
 	"time"
-
-	"github.com/sss-eda/everything/instrumentation"
 )
 
-type Event[E Events] struct {
-	InstrumentID instrumentation.InstrumentID
-	Payload      E
+type BaseEvent struct {
+	Timestamp time.Time
+	ID        string
 }
 
-type Events interface {
-	ConfigReadEvent | TimeReadEvent | TimeSetEvent
-}
+// type Events interface {
+// 	ConfigReadEvent | TimeReadEvent | TimeSetEvent
+// }
 
 type ConfigReadEvent struct {
+	base    BaseEvent
+	payload ConfigReadEventPayload
+}
+
+type ConfigReadEventPayload struct {
 	StationNumber uint8
 }
 
-type TimeReadEvent struct {
+type TimeReadEventPayload struct {
 	Time time.Time
 }
 
-type TimeSetEvent struct {
+type TimeSetEventPayload struct {
 	Time time.Time
 }
-
-type ConfigRead struct{}
