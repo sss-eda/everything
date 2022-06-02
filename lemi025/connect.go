@@ -12,3 +12,7 @@ type Connection interface {
 	Events() <-chan Event
 	Close() error
 }
+
+func Connect(instrumentationService instrumentation.Service) (*instrument.Connection, error) {
+
+}
