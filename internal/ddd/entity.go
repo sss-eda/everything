@@ -2,11 +2,14 @@ package ddd
 
 type EntityID string
 
-type Identifiable interface {
+type Entity interface {
 	ID() EntityID
-	IsEqualTo(Identifiable) bool
 }
 
-type Entity interface {
-	Identifiable
+type BaseEntity struct {
+	id EntityID
+}
+
+func (entity BaseEntity) ID() EntityID {
+	return entity.id
 }

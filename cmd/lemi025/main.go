@@ -1,26 +1,37 @@
 package main
 
 import (
-	"log"
-
+	"github.com/sss-eda/everything/jetstream"
 	"github.com/sss-eda/everything/lemi025"
+	"github.com/sss-eda/everything/serial"
+
+	natsio "github.com/nats-io/nats.go"
+	tarm "github.com/tarm/serial"
 )
 
 func main() {
-	client, err := websocket.NewInstrumentClient("ws://api.sansa.dev/instrument")
-	if err != nil {
-		log.Fatal(err)
-	}
+	port, _ := tarm.OpenPort(&tarm.Config{Name: "COM1", Baud: 115200})
 
-	instrument, err := serial.NewLemi025Adapter("/dev/ttyACM0")
+	adapter, _ := serial.NewLemi025Adapter(port)
 
-	commands := client.Subscribe("commands")
-	events := instrument.Subscribe("events")
+	nc, _ := natsio.Connect("wss://nats.sansa.dev")
+	js, _ := nc.JetStream()
+	store, _ := jetstream.NewEventStore(js)
 
-	client.Subscribe(lemi025.ReadConfigCommand, instrument.ReadConfig)
-	client.Subscribe(lemi025.ReadTimeCommand, instrument.ReadTime)
-	client.Subscribe(lemi025.SetTimeCommand, instrument.SetTime)
+	lemi025.Connect(
+		store,
+		cqrs.WithCommandHandler(adapter.ReadConfig),
+		cqrs.WithCommandHandler(adapter.ReadTime),
+	)
 
-	instrument.Subscribe(lemi025.ConfigReadEvent, client.Publish)
-	instrument.Subscribe(lemi025.TimeReadEvent, client.Publish)
+	// aggregate, _ := ddd.NewAggregate(
+	// 	lemi025.AggregateKind,
+
+	// 	store,
+	// 	es.WithCommandHandler("readConfig", adapter.ReadConfig),
+	// 	es.WithCommandHandler("readTime", adapter.ReadTime),
+	// 	es.WithCommandHandler("setTime", adapter.SetTime),
+	// )
+
+	// nats.Subscribe(nc, "lemi025.001.commands", instrument)
 }

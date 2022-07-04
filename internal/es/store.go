@@ -2,7 +2,7 @@ package es
 
 import "github.com/sss-eda/everything/internal/ddd"
 
-type Store interface {
-	Load(ddd.AggregateID) (<-chan ddd.Event, error)
-	Save(ddd.AggregateID, ddd.Event) error
+type EventStore interface {
+	Save(ddd.AggregateType, ddd.AggregateID, *ddd.Aggregate) error
+	Load(ddd.AggregateType, ddd.AggregateID) (*ddd.Aggregate, error)
 }

@@ -1,4 +1,4 @@
-package ddd
+package es
 
 type Event struct {
 	Version uint64
